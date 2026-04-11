@@ -6,7 +6,11 @@ import GUI from "lil-gui";
 /**
  * Debug UI
  */
-const gui = new GUI();
+const gui = new GUI({
+  width: 450,
+  title: "Nice debug UI",
+  closeFolders: true,
+});
 const debugObject = {};
 
 debugObject.spin = () => {
@@ -15,6 +19,41 @@ debugObject.spin = () => {
     y: mesh.rotation.y + Math.PI * 2,
   });
 };
+
+// Closes the GUI by default
+// gui.close();
+
+gui.hide();
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "h") {
+    if (gui._hidden) {
+      gui.show();
+    } else {
+      gui.hide();
+    }
+  }
+});
+
+gui.add(debugObject, "spin");
+
+debugObject.subdivision = 2;
+gui
+  .add(debugObject, "subdivision")
+  .min(1)
+  .max(20)
+  .step(1)
+  .onFinishChange(() => {
+    console.log("subdivision", debugObject.subdivision);
+    mesh.geometry.dispose();
+    // prettier-ignore
+    mesh.geometry = new THREE.BoxGeometry(
+      1, 1, 1,
+      debugObject.subdivision, debugObject.subdivision, debugObject.subdivision,
+    );
+  });
+
+// gui.add(geometry, 'widthSegments')
 
 /**
  * Base
@@ -34,19 +73,21 @@ const material = new THREE.MeshBasicMaterial({ color: debugObject.color });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
-gui.add(mesh.position, "y").min(-3).max(3).step(0.01);
+// Folder
+const cubeTweaks = gui.addFolder("Fantastic cube");
 
-gui.add(mesh, "visible");
+cubeTweaks.add(mesh.position, "y").min(-3).max(3).step(0.01);
 
-gui.add(material, "wireframe");
-gui.add(debugObject, "spin");
+cubeTweaks.add(mesh, "visible");
+
+cubeTweaks.add(material, "wireframe");
 
 // gui.addColor(material, "color").onChange(() => {
 //   console.log(material.color.getHexString());
 //   material.color.set(debugObject.color);
 // });
 
-gui.addColor(debugObject, "color").onChange(() => {
+cubeTweaks.addColor(debugObject, "color").onChange(() => {
   material.color.set(debugObject.color);
 });
 
