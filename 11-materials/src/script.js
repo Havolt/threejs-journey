@@ -1,5 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import GUI from "lil-gui";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+
+// DEBUG
+const gui = new GUI();
 
 // Textures
 const textureLoader = new THREE.TextureLoader();
@@ -59,7 +64,24 @@ const scene = new THREE.Scene();
 // const material = new THREE.MeshDepthMaterial();
 
 // MeshLambertMaterial
-const material = new THREE.MeshLambertMaterial();
+// const material = new THREE.MeshLambertMaterial();
+
+// MeshPhoneMaterial
+//
+
+// MeshToonMaterial
+// const material = new THREE.MeshToonMaterial();
+// gradientTexture3.minFilter = THREE.NearestFilter;
+// gradientTexture3.magFilter = THREE.NearestFilter;
+// material.gradientMap = gradientTexture3;
+
+// MeshStandardMaterial
+const material = new THREE.MeshStandardMaterial();
+material.metalness = 0.5;
+material.roughness = 0.5;
+
+gui.add(material, "metalness").min(0).max(1).step(0.001);
+gui.add(material, "roughness").min(0).max(1).step(0.001);
 
 const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), material);
 sphere.position.x = -1.5;
@@ -85,6 +107,15 @@ pointLight.position.x = 2;
 pointLight.position.y = 3;
 pointLight.position.z = 4;
 scene.add(pointLight);
+
+// Environment map (skybox)
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load("./textures/environmentMap/2k.hdr", (environmentMap) => {
+  console.log({ environmentMap });
+  environmentMap.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = environmentMap;
+  scene.environment = environmentMap;
+});
 
 /**
  * Sizes
