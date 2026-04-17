@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { fontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import GUI from "lil-gui";
 
 /**
@@ -21,7 +22,14 @@ const scene = new THREE.Scene();
 const textureLoader = new THREE.TextureLoader();
 
 // Font
-const fontLoader = new fontLoader();
+const fontLoader = new FontLoader();
+
+fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
+  console.log("font loaded");
+  const textGeometry = new TextGeometry("Mark Fitz", {
+    font,
+  });
+});
 
 /**
  * Object
