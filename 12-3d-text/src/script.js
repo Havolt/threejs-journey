@@ -26,20 +26,32 @@ const fontLoader = new FontLoader();
 
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   console.log("font loaded");
-  const textGeometry = new TextGeometry("Mark Fitz", {
+  const textGeometry = new TextGeometry("Cait & Ava", {
     font,
+    size: 0.5,
+    depth: 0.2,
+    curveSegments: 5,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.02,
+    bevelOffset: 0,
+    bevelSegments: 3,
   });
+  const material = new THREE.MeshBasicMaterial();
+  material.wireframe = true;
+  const text = new THREE.Mesh(textGeometry, material);
+  scene.add(text);
 });
 
 /**
  * Object
  */
-const cube = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1),
-  new THREE.MeshBasicMaterial(),
-);
+// const cube = new THREE.Mesh(
+//   new THREE.BoxGeometry(1, 1, 1),
+//   new THREE.MeshBasicMaterial(),
+// );
 
-scene.add(cube);
+// scene.add(cube);
 
 /**
  * Sizes
