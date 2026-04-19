@@ -16,6 +16,10 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
+// Axes helper
+const axesHelper = new THREE.AxesHelper();
+scene.add(axesHelper);
+
 /**
  * Textures
  */
@@ -37,6 +41,13 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
     bevelOffset: 0,
     bevelSegments: 3,
   });
+  textGeometry.computeBoundingBox();
+  textGeometry.translate(
+    -textGeometry.boundingBox.max.x * 0.5,
+    -textGeometry.boundingBox.max.y * 0.5,
+    -textGeometry.boundingBox.max.z * 0.5,
+  );
+
   const material = new THREE.MeshBasicMaterial();
   material.wireframe = true;
   const text = new THREE.Mesh(textGeometry, material);
