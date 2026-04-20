@@ -17,16 +17,21 @@ const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
 // Axes helper
-const axesHelper = new THREE.AxesHelper();
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper();
+// scene.add(axesHelper);
 
 /**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const matcapTexture = textureLoader.load("/textures/matcaps/8.png");
+matcapTexture.colorSpace = THREE.SRGBColorSpace;
 
 // Font
 const fontLoader = new FontLoader();
+
+const BEVEL_SIZE = 0.02;
+const BEVEL_THICKNESS = 0.03;
 
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   console.log("font loaded");
@@ -36,23 +41,44 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
     depth: 0.2,
     curveSegments: 5,
     bevelEnabled: true,
-    bevelThickness: 0.03,
-    bevelSize: 0.02,
+    bevelThickness: BEVEL_THICKNESS,
+    bevelSize: BEVEL_SIZE,
     bevelOffset: 0,
     bevelSegments: 3,
   });
-  textGeometry.computeBoundingBox();
-  textGeometry.translate(
-    -textGeometry.boundingBox.max.x * 0.5,
-    -textGeometry.boundingBox.max.y * 0.5,
-    -textGeometry.boundingBox.max.z * 0.5,
-  );
+  // textGeometry.computeBoundingBox();
+  // textGeometry.translate(
+  //   -(textGeometry.boundingBox.max.x - BEVEL_SIZE) * 0.5,
+  //   -(textGeometry.boundingBox.max.y - BEVEL_SIZE) * 0.5,
+  //   -(textGeometry.boundingBox.max.z - BEVEL_THICKNESS) * 0.5,
+  // );
 
-  const material = new THREE.MeshBasicMaterial();
-  material.wireframe = true;
+  textGeometry.center();
+
+  const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
+  // material.wireframe = true;
   const text = new THREE.Mesh(textGeometry, material);
   scene.add(text);
 });
+
+const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
+const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
+
+for (let i = 0; i < 100; i++) {
+  const donut = new THREE.Mesh(donutGeometry, material);
+
+  donut.position.x = (Math.random() - 0.5) * 10;
+  donut.position.y = (Math.random() - 0.5) * 10;
+  donut.position.z = (Math.random() - 0.5) * 10;
+
+  donut.rotation.x = Math.random() * Math.PI;
+  donut.rotation.y = Math.random() * Math.PI;
+
+  const scale = Math.random();
+  donut.scale.set(scale, scale, scale);
+
+  scene.add(donut);
+}
 
 /**
  * Object
