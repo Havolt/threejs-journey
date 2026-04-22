@@ -29,11 +29,49 @@ const scene = new THREE.Scene();
 /**
  * Lights
  */
+// Ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 // ambientLight.color = new THREE.Color(0xffffff);
 // ambientLight.intensity = 0.5;
 gui.add(ambientLight, "intensity").min(0).max(3).step(0.001);
 scene.add(ambientLight);
+
+// Directional light
+const directionalLight = new THREE.DirectionalLight(0x00eecd, 0.9);
+directionalLight.position.set(1, 0.25, 0);
+scene.add(directionalLight);
+gui.add(directionalLight, "intensity").min(0).max(3).step(0.001);
+
+// Hemisphere light
+const hemisphereLight = new THREE.HemisphereLight(0x44ff00, 0x0000ff, 0.9);
+scene.add(hemisphereLight);
+
+// Point light
+const pointLight = new THREE.PointLight(0xff9000, 0.9, 10);
+pointLight.position.set(1, -0.5, 1);
+scene.add(pointLight);
+gui.add(pointLight, "distance").min(0).max(20).step(0.001);
+
+// Rect area light
+const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 6, 1, 1);
+rectAreaLight.position.set(-1.5, 0, 1.5);
+rectAreaLight.lookAt(new THREE.Vector3());
+scene.add(rectAreaLight);
+
+// Spot light
+const spotLight = new THREE.SpotLight(
+  0x78ee22,
+  4.5,
+  10,
+  Math.Pi * 0.1,
+  0.25,
+  1,
+);
+spotLight.position.set(0, 2, 3);
+scene.add(spotLight);
+
+spotLight.target.position.x = -0.75;
+scene.add(spotLight.target);
 
 /**
  * Objects
