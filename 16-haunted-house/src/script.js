@@ -35,7 +35,6 @@ const floor = new THREE.Mesh(
   new THREE.MeshStandardMaterial({ roughness: 0.7 }),
 );
 floor.rotation.x = -Math.PI * 0.5;
-floor.position.y = -0.5;
 scene.add(floor);
 
 // House container
@@ -68,6 +67,9 @@ door.position.y = 1.1;
 door.position.z = 2 + 0.01;
 house.add(door);
 
+gui.add(house.position, "x").min(0).max(10).step(0.001);
+gui.add(house.position, "z").min(0).max(10).step(0.001);
+
 // Bush geometry
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16);
 const bushMaterial = new THREE.MeshStandardMaterial({ color: "#89c854" });
@@ -89,6 +91,31 @@ bush4.scale.set(0.25, 0.25, 0.25);
 bush4.position.set(-1, 0.1, 2.4);
 
 house.add(bush1, bush2, bush3, bush4);
+
+// Graves
+const graves = new THREE.Group();
+scene.add(graves);
+
+const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2);
+const graveMaterial = new THREE.MeshStandardMaterial({ color: "#b2b6b1" });
+
+for (let i = 0; i < 30; i++) {
+  const grave = new THREE.Mesh(graveGeometry, graveMaterial);
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 3 + 0.4 + Math.random() * 4;
+  console.log({ angle });
+
+  const x = Math.sin(angle) * radius;
+  const z = Math.cos(angle) * radius;
+  const y = Math.random() * 0.4;
+  grave.position.set(x, y, z);
+  grave.rotation.set(
+    (Math.random() - 0.5) * 0.4,
+    (Math.random() - 0.5) * 0.4,
+    (Math.random() - 0.5) * 0.4,
+  );
+  graves.add(grave);
+}
 
 /**
  * Lights
