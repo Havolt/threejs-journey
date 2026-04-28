@@ -18,6 +18,12 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
+// Textures
+const textureLoader = new THREE.TextureLoader();
+
+// Floor
+const floorAlphaTexture = textureLoader.load("./floor/alpha.jpg");
+
 /**
  * House
  */
